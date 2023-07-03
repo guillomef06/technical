@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true">
+
+    <property name="LOGGING_FOLDER" value="./logs" />
+    <property name ="LOGGING_FILE_NAME" value="SLF4J_LOG"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%-16.16t] ${PID:- } - %-5p - %-35.35c{36} : %msg%n" />
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RollingInfoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${LOGGING_FOLDER}/INFO_${LOGGING_FILE_NAME}.log</file>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGGING_FOLDER}/archived/info/${LOGGING_FILE_NAME}_%d{yyyy-MM-dd}.%i.zip
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <totalSizeCap>300MB</totalSizeCap>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="RollingWarnFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${LOGGING_FOLDER}/WARN_${LOGGING_FILE_NAME}.log</file>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGGING_FOLDER}/archived/warn/${LOGGING_FILE_NAME}_%d{yyyy-MM-dd}.%i.zip
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <totalSizeCap>300MB</totalSizeCap>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="RollingErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${LOGGING_FOLDER}/ERROR_${LOGGING_FILE_NAME}.log</file>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOGGING_FOLDER}/archived/error/${LOGGING_FILE_NAME}_%d{yyyy-MM-dd}.%i.zip
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <totalSizeCap>300MB</totalSizeCap>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <springProfile name="dev | staging">
+        <!-- LOG everything at INFO level -->
+        <root level="info">
+            <appender-ref ref="Console" />
+            <appender-ref ref="RollingInfoFile" />
+            <appender-ref ref="RollingWarnFile" />
+            <appender-ref ref="RollingErrorFile" />
+        </root>
+        <!-- LOG at TRACE level -->
+        <logger name="com.example.technical" level="trace" additivity="false">
+            <appender-ref ref="Console" />
+            <appender-ref ref="RollingInfoFile" />
+            <appender-ref ref="RollingWarnFile" />
+            <appender-ref ref="RollingErrorFile" />
+        </logger>
+    </springProfile>
+
+    <springProfile name="production">
+        <root level="info">
+            <appender-ref ref="RollingInfoFile" />
+            <appender-ref ref="RollingWarnFile" />
+            <appender-ref ref="RollingErrorFile" />
+        </root>
+        <logger name="com.example.technical" level="info" additivity="false">
+            <appender-ref ref="RollingInfoFile" />
+            <appender-ref ref="RollingWarnFile" />
+            <appender-ref ref="RollingErrorFile" />
+        </logger>
+    </springProfile>
+</configuration>
