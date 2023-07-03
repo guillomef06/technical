@@ -1,6 +1,5 @@
 package com.example.technical.controllers;
 
-import com.example.technical.TestApplication;
 import com.example.technical.exceptions.*;
 import com.example.technical.models.entities.Gender;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
@@ -11,15 +10,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -36,8 +32,6 @@ AUTHOR Guillaume
 PROJECT technical
 DATE 02/07/2023 */
 
-@SpringBootTest(classes = TestApplication.class)
-@ExtendWith(SpringExtension.class)
 @WebMvcTest(CustomerRestController.class)
 @ActiveProfiles("test")
 public class CustomerRestControllerTest {
