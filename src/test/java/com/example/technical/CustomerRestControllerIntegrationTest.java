@@ -29,18 +29,11 @@ public class CustomerRestControllerIntegrationTest {
     @Autowired
     private CustomerRestController customerRestController;
 
-    private CustomerResponseRemoteObject customerResponse;
-
     private CustomerRequestRemoteObject customerRequest;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        customerResponse = new CustomerResponseRemoteObject("userName",
-                LocalDate.of(2000, Month.JULY, 3),
-                "France",
-                "0600000000",
-                Gender.FEMALE);
 
         customerRequest = new CustomerRequestRemoteObject("userName",
                 LocalDate.of(2000, Month.JULY, 3),
