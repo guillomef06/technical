@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /* FILE UserRestController
 AUTHOR Guillaume
 PROJECT technical
@@ -31,13 +33,13 @@ public class CustomerRestController implements ICustomerRestController {
     /**
      * This method is mapped to POST requests to /register
      * @param userRequest is the dto we receive in Json format
-     * @return userRequest is sent if the operation is successful
+     * @return userResponse is sent if the operation is successful
      * with the HTTP status code 201
      */
     @PostMapping("register")
     @ResponseStatus(HttpStatus.CREATED)
     @Override
-    public CustomerRequestRemoteObject registerCustomer(@Valid @RequestBody CustomerRequestRemoteObject userRequest) {
+    public CustomerResponseRemoteObject registerCustomer(@Valid @RequestBody CustomerRequestRemoteObject userRequest) {
         return this.userService.registerCustomer(userRequest);
     }
 
@@ -50,6 +52,17 @@ public class CustomerRestController implements ICustomerRestController {
     @Override
     public CustomerResponseRemoteObject getCustomer(@PathVariable("id") Long id) {
         return this.userService.getCustomer(id);
+    }
+
+    /**
+     * Gets all customers.
+     *
+     * @return a ArrayList of customers
+     */
+    @GetMapping("")
+    @Override
+    public List<CustomerResponseRemoteObject> getAllCustomers() {
+        return this.userService.getAllCustomers();
     }
 }
 

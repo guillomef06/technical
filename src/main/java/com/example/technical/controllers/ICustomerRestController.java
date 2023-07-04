@@ -8,6 +8,8 @@ package com.example.technical.controllers;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
 import com.example.technical.models.response.CustomerResponseRemoteObject;
 
+import java.util.List;
+
 /**
  * The interface Customer rest controller.
  */
@@ -18,7 +20,7 @@ public interface ICustomerRestController {
      * @param userRequest the user request
      * @return the customer request remote object
      */
-    public CustomerRequestRemoteObject registerCustomer(CustomerRequestRemoteObject userRequest);
+    CustomerResponseRemoteObject registerCustomer(CustomerRequestRemoteObject userRequest);
 
     /**
      * Gets customer.
@@ -26,5 +28,12 @@ public interface ICustomerRestController {
      * @param id the id
      * @return the customer
      */
-    public CustomerResponseRemoteObject getCustomer(Long id);
+    CustomerResponseRemoteObject getCustomer(Long id);
+
+    /**
+     * Gets all customers.
+     *
+     * @return a ArrayList of customers
+     */
+    List<CustomerResponseRemoteObject> getAllCustomers();
 }

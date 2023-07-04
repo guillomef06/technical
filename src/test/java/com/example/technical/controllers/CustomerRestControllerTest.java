@@ -21,8 +21,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -52,7 +55,8 @@ class CustomerRestControllerTest {
 
     @BeforeAll
     static void setupBeforeAll() {
-        customerResponse = new CustomerResponseRemoteObject("Alexa",
+        customerResponse = new CustomerResponseRemoteObject(null,
+                "Alexa",
                 LocalDate.of(2000, 1,1),
                 "France",
                 "0600000000",
@@ -75,7 +79,7 @@ class CustomerRestControllerTest {
 
     @Test
     void registerCustomerCreated() throws Exception {
-        Mockito.when(customerService.registerCustomer(customerRequest)).thenReturn(customerRequest);
+        Mockito.when(customerService.registerCustomer(customerRequest)).thenReturn(customerResponse);
 
         mockMvc.perform(post("/api/v1/customer/register")
                         .content(asJsonString(customerRequest))
@@ -158,5 +162,18 @@ class CustomerRestControllerTest {
                 .andDo(print())
                 .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(NotFoundException.class))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getAllCustomer() throws Exception {
+        List<CustomerResponseRemoteObject> all = new ArrayList<>();
+        all.add(customerResponse);
+        Mockito.when(customerService.getAllCustomers()).thenReturn(all);
+
+        mockMvc.perform(get("/api/v1/customer/")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }

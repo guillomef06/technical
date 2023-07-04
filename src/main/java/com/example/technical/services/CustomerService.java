@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -62,10 +63,10 @@ public class CustomerService implements ICustomerService {
      * if he is already registered
      * Then saved if it's a new customer
      * @param customerRequest is the DTO we receive
-     * @return customerRequest is sent once customer is saved
+     * @return CustomerResponseRemoteObject is sent once customer is saved
      */
     @Override
-    public CustomerRequestRemoteObject registerCustomer(CustomerRequestRemoteObject customerRequest) {
+    public CustomerResponseRemoteObject registerCustomer(CustomerRequestRemoteObject customerRequest) {
         if (Period.between(customerRequest.getDateOfBirth(), LocalDate.now()).getYears() < appProperties.getMinimumAge()) {
             throw new TooYoungException("Customer must be at least " + appProperties.getMinimumAge() + " years old to register");
         }
@@ -81,8 +82,8 @@ public class CustomerService implements ICustomerService {
             throw new CustomerAlreadyRegisteredException("This customer is already registered");
         }
         Customer newCustomer = this.modelMapper.map(customerRequest, Customer.class);
-        this.customerRepository.save(newCustomer);
-        return customerRequest;
+        newCustomer = this.customerRepository.save(newCustomer);
+        return this.modelMapper.map(newCustomer, CustomerResponseRemoteObject.class);
     }
 
     /**
@@ -98,5 +99,17 @@ public class CustomerService implements ICustomerService {
             throw new NotFoundException("User with id " + id + " was not found");
         }
         return this.modelMapper.map(optCustomer.get(), CustomerResponseRemoteObject.class);
+    }
+
+    /**
+     * Gets all customers.
+     *
+     * @return a List of CustomerResponseRemoteObject
+     */
+    @Override
+    public List<CustomerResponseRemoteObject> getAllCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+        return customers.stream().map(customer ->
+                        modelMapper.map(customer, CustomerResponseRemoteObject.class)).toList();
     }
 }

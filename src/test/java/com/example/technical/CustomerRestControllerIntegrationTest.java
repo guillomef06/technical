@@ -4,6 +4,7 @@ import com.example.technical.controllers.CustomerRestController;
 import com.example.technical.exceptions.*;
 import com.example.technical.models.entities.Gender;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
+import com.example.technical.models.response.CustomerResponseRemoteObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,9 @@ class CustomerRestControllerIntegrationTest {
 
     @Test
     void registerCustomer() {
-        CustomerRequestRemoteObject found = customerRestController.registerCustomer(customerRequest);
+        CustomerResponseRemoteObject found = customerRestController.registerCustomer(customerRequest);
 
-        assertThat(found).isEqualTo(customerRequest);
+        assertThat(found.getUserName()).isEqualTo(customerRequest.getUserName());
     }
 
     @Test
@@ -86,6 +87,11 @@ class CustomerRestControllerIntegrationTest {
 
     @Test
     void customerNotFound() {
-        assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> customerRestController.getCustomer(3L));
+        assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> customerRestController.getCustomer(10L));
+    }
+
+    @Test
+    void getAllCustomers() {
+        assertThat(customerRestController.getAllCustomers()).isNotEmpty();
     }
 }

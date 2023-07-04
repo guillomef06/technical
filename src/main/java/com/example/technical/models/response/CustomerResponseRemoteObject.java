@@ -25,6 +25,8 @@ DATE 29/06/2023 */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerResponseRemoteObject implements Serializable {
 
+    private Long id;
+
     private String userName;
 
     private LocalDate dateOfBirth;
