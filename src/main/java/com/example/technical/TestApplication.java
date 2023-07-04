@@ -14,10 +14,20 @@ import org.springframework.context.annotation.Bean;
 @EnableCaching
 public class TestApplication {
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
     }
 
+    /**
+     * Gets model mapper.
+     *
+     * @return the model mapper
+     */
     @Bean
     public ModelMapper getModelMapper() {
         return new ModelMapper();

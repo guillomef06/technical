@@ -12,9 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * This is the Configuration bean for our project
- *
  */
-
 @Getter
 @Setter
 @Configuration

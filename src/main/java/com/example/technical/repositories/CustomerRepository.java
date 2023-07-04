@@ -17,5 +17,12 @@ DATE 29/06/2023 */
  */
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    /**
+     * Exists by user name and date of birth boolean.
+     *
+     * @param userName    the user name
+     * @param dateOfBirth the date of birth
+     * @return the boolean
+     */
     boolean existsByUserNameAndDateOfBirth(String userName, LocalDate dateOfBirth);
 }

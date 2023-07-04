@@ -17,7 +17,6 @@ import java.time.LocalDate;
  * It will be used to store customers into the database
  * <p>
  * Lombok's annotations are used to avoid boilerplate code
- *
  */
 @NoArgsConstructor
 @AllArgsConstructor

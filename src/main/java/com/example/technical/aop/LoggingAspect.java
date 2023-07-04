@@ -16,8 +16,8 @@ import org.springframework.util.StopWatch;
 import java.util.Arrays;
 
 /**
- * <h1>This class will log the project activity</h1>
- *
+ * This class will log the project activity
+ * <p>
  * Taking advantage of Spring AOP this class will bring
  * additional behavior to existing code without modification of the code itself.
  *
@@ -67,7 +67,7 @@ public class LoggingAspect {
      * within the rest layer
      *
      * @param joinPoint for the AfterReturning advice
-     * @param value is the Object returned by our joinPoint
+     * @param value     is the Object returned by our joinPoint
      */
     @AfterReturning(pointcut = "springRestControllerBeanPointCut()", returning = "value")
     public void logAfterMethod(JoinPoint joinPoint, Object value) {
@@ -84,6 +84,8 @@ public class LoggingAspect {
      * within the rest layer
      *
      * @param joinPoint for the Around advice
+     * @return the object
+     * @throws Throwable the throwable
      */
     @Around("springRestControllerBeanPointCut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -107,7 +109,7 @@ public class LoggingAspect {
      * This advice will log Exceptions within the service layer
      *
      * @param joinPoint for the AfterThrowing advice
-     * @param e that are thrown by the joinPoint
+     * @param e         that are thrown by the joinPoint
      */
     @AfterThrowing(pointcut = "springServiceBeanPointCut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Exception e) {

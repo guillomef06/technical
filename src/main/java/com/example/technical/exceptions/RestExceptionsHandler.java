@@ -32,12 +32,24 @@ public class RestExceptionsHandler {
      */
     private final AppPropertiesResolver appPropertiesResolver;
 
+    /**
+     * Handle not found exception rest exception message.
+     *
+     * @param e the e
+     * @return the rest exception message
+     */
     @ExceptionHandler(value = {NotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public RestExceptionMessage handleNotFoundException(NotFoundException e) {
         return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 
+    /**
+     * Handle method argument not valid exception rest exception message.
+     *
+     * @param e the e
+     * @return the rest exception message
+     */
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RestExceptionMessage handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -47,30 +59,60 @@ public class RestExceptionsHandler {
         return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 
+    /**
+     * Handle constraint violation exception rest exception message.
+     *
+     * @param e the e
+     * @return the rest exception message
+     */
     @ExceptionHandler(value = {ConstraintViolationException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RestExceptionMessage handleConstraintViolationException(ConstraintViolationException e) {
         return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 
+    /**
+     * Handle too young exception rest exception message.
+     *
+     * @param e the e
+     * @return the rest exception message
+     */
     @ExceptionHandler(value = {TooYoungException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RestExceptionMessage handleTooYoungException(TooYoungException e) {
         return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 
+    /**
+     * Handle too young exception rest exception message.
+     *
+     * @param e the e
+     * @return the rest exception message
+     */
     @ExceptionHandler(value = {WrongCountryException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RestExceptionMessage handleTooYoungException(WrongCountryException e) {
         return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 
+    /**
+     * Handle customer already registered exception rest exception message.
+     *
+     * @param e the e
+     * @return the rest exception message
+     */
     @ExceptionHandler(value = {CustomerAlreadyRegisteredException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RestExceptionMessage handleCustomerAlreadyRegisteredException(CustomerAlreadyRegisteredException e) {
         return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 
+    /**
+     * Handle invalid phone number exception rest exception message.
+     *
+     * @param e the e
+     * @return the rest exception message
+     */
     @ExceptionHandler(value = {InvalidPhoneNumberException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RestExceptionMessage handleInvalidPhoneNumberException(InvalidPhoneNumberException e) {
