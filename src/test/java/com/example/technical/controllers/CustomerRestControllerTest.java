@@ -1,5 +1,6 @@
 package com.example.technical.controllers;
 
+import com.example.technical.config.AppPropertiesResolver;
 import com.example.technical.exceptions.*;
 import com.example.technical.models.entities.Gender;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -32,9 +34,11 @@ AUTHOR Guillaume
 PROJECT technical
 DATE 02/07/2023 */
 
-@WebMvcTest(CustomerRestController.class)
+
+@WebMvcTest(value = CustomerRestController.class)
+@EnableConfigurationProperties(value = AppPropertiesResolver.class)
 @ActiveProfiles("test")
-public class CustomerRestControllerTest {
+class CustomerRestControllerTest {
 
     @MockBean
     private CustomerService customerService;
@@ -47,7 +51,7 @@ public class CustomerRestControllerTest {
     private static CustomerRequestRemoteObject customerRequest;
 
     @BeforeAll
-    public static void setupBeforeAll() {
+    static void setupBeforeAll() {
         customerResponse = new CustomerResponseRemoteObject("Alexa",
                 LocalDate.of(2000, 1,1),
                 "France",
@@ -70,7 +74,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    public void registerCustomerCreated() throws Exception {
+    void registerCustomerCreated() throws Exception {
         Mockito.when(customerService.registerCustomer(customerRequest)).thenReturn(customerRequest);
 
         mockMvc.perform(post("/api/v1/customer/register")
@@ -83,7 +87,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    public void registerCustomerTooYoung() throws Exception {
+    void registerCustomerTooYoung() throws Exception {
         Mockito.when(customerService.registerCustomer(customerRequest)).thenThrow(TooYoungException.class);
 
         mockMvc.perform(post("/api/v1/customer/register")
@@ -96,7 +100,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    public void registerCustomerWrongCountry() throws Exception {
+    void registerCustomerWrongCountry() throws Exception {
         Mockito.when(customerService.registerCustomer(customerRequest)).thenThrow(WrongCountryException.class);
 
         mockMvc.perform(post("/api/v1/customer/register")
@@ -109,7 +113,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    public void registerCustomerInvalidPhoneNumber() throws Exception {
+    void registerCustomerInvalidPhoneNumber() throws Exception {
         Mockito.when(customerService.registerCustomer(customerRequest)).thenThrow(InvalidPhoneNumberException.class);
 
         mockMvc.perform(post("/api/v1/customer/register")
@@ -122,7 +126,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    public void registerCustomerAlreadyRegistered() throws Exception {
+    void registerCustomerAlreadyRegistered() throws Exception {
         Mockito.when(customerService.registerCustomer(customerRequest)).thenThrow(CustomerAlreadyRegisteredException.class);
 
         mockMvc.perform(post("/api/v1/customer/register")
@@ -135,7 +139,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    public void getUserSuccess() throws Exception {
+    void getCustomerSuccess() throws Exception {
         Mockito.when(customerService.getCustomer(1L)).thenReturn(customerResponse);
 
         mockMvc.perform(get("/api/v1/customer/{id}", 1L)
@@ -146,7 +150,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    public void getUserNotFound() throws Exception {
+    void getCustomerNotFound() throws Exception {
         Mockito.when(customerService.getCustomer(1L)).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/api/v1/customer/{id}", 1L)

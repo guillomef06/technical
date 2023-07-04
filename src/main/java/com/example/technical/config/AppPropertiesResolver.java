@@ -5,23 +5,34 @@ AUTHOR Guillaume
 PROJECT technical
 DATE 03/07/2023 */
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+/**
+ * This is the Configuration bean for our project
+ *
+ */
+
+@Getter
+@Setter
+@Configuration
+@ConfigurationProperties(prefix = "app")
 public class AppPropertiesResolver {
 
-    @Value("${app.minimum_age}")
+    /**
+     * Minimum age to be considered as an adult
+     */
     private Integer minimumAge;
 
-    @Value("${app.country}")
+    /**
+     * Country of residence
+     */
     private String country;
 
-    public Integer getMinimumAge() {
-        return minimumAge;
-    }
-
-    public String getCountry() {
-        return country;
-    }
+    /**
+     * Time zone ID
+     */
+    private String zoneId;
 }

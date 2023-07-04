@@ -3,6 +3,7 @@ package com.example.technical.models.request;
 import com.example.technical.models.entities.Gender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,11 @@ AUTHOR Guillaume
 PROJECT technical
 DATE 29/06/2023 */
 
+/**
+ * This is the DTO we receive for the POST request
+ * Note that the Valid annotation inside the Rest controller's method
+ * will activate the validation constraints on fields
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -28,6 +34,7 @@ public class CustomerRequestRemoteObject implements Serializable {
     private String userName;
 
     @NotNull
+    @Past
     private LocalDate dateOfBirth;
 
     @NotNull(message = "Country must not be null")

@@ -11,8 +11,8 @@ import com.example.technical.models.entities.Customer;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
 import com.example.technical.models.response.CustomerResponseRemoteObject;
 import com.example.technical.repositories.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -21,32 +21,48 @@ import java.time.Period;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+/**
+ * This service hold our business logic
+ */
 @Service
+@RequiredArgsConstructor
 public class CustomerService implements ICustomerService {
 
+    /**
+     * Configuration file
+     */
     private final AppPropertiesResolver appProperties;
 
+    /**
+     * The repository
+     */
     private final CustomerRepository customerRepository;
 
+    /**
+     * The mapper between DTO and Entities
+     */
     private final ModelMapper modelMapper;
 
-    @Autowired
-    public CustomerService(AppPropertiesResolver appPropertiesResolver,
-                           CustomerRepository customerRepository,
-                           ModelMapper modelMapper) {
-        this.appProperties = appPropertiesResolver;
-        this.customerRepository = customerRepository;
-        this.modelMapper = modelMapper;
-    }
-
-
+    /**
+     * Check if the String is a valid phone number
+     *
+     * @param phoneNumber should be a String that contains 10 digits
+     * @return true if phoneNumber is correct, false otherwise
+     */
     private boolean isPhoneNumber(String phoneNumber) {
         Pattern pattern = Pattern.compile("^\\d{10}$");
         return pattern.matcher(phoneNumber).matches();
     }
 
     /**
-     * @param customerRequest
+     * This method will check if the customer is
+     * old enough
+     * french
+     * if his phone number is valid when sent
+     * if he is already registered
+     * Then saved if it's a new customer
+     * @param customerRequest is the DTO we receive
+     * @return customerRequest is sent once customer is saved
      */
     @Override
     public CustomerRequestRemoteObject registerCustomer(CustomerRequestRemoteObject customerRequest) {
@@ -56,15 +72,13 @@ public class CustomerService implements ICustomerService {
         if (!appProperties.getCountry().equalsIgnoreCase(customerRequest.getCountry())) {
             throw new WrongCountryException("Customer must be from " + appProperties.getCountry() + " to register");
         }
+        if (customerRequest.getPhoneNumber() != null && !isPhoneNumber(customerRequest.getPhoneNumber())) {
+            throw new InvalidPhoneNumberException("Phone number must contain 10 digits");
+        }
         if (this.customerRepository.existsByUserNameAndDateOfBirth(
                 customerRequest.getUserName(),
                 customerRequest.getDateOfBirth())) {
             throw new CustomerAlreadyRegisteredException("This customer is already registered");
-        }
-        if (customerRequest.getPhoneNumber() != null) {
-            if (!isPhoneNumber(customerRequest.getPhoneNumber())) {
-                throw new InvalidPhoneNumberException("Phone number must contain 10 digits");
-            }
         }
         Customer newCustomer = this.modelMapper.map(customerRequest, Customer.class);
         this.customerRepository.save(newCustomer);
@@ -72,8 +86,9 @@ public class CustomerService implements ICustomerService {
     }
 
     /**
-     * @param id
-     * @return
+     * This method will retrieve the customer with his id
+     * @param id used to find the customer
+     * @return CustomerResponseRemoteObject when customer is found
      */
     @Override
     @Cacheable("customer")

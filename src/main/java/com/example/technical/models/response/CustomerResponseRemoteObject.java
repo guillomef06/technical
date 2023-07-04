@@ -14,6 +14,11 @@ AUTHOR Guillaume
 PROJECT technical
 DATE 29/06/2023 */
 
+/**
+ * This is the DTO we send for the GET request
+ * The JsonInclude annotation specify that only
+ * non-null attribute will be serialized
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

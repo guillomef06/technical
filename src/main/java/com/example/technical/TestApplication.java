@@ -6,6 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * This is the main class of our project
+ * it will bootstrap Spring and enable caching
+ */
 @SpringBootApplication
 @EnableCaching
 public class TestApplication {

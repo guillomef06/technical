@@ -11,8 +11,14 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Objects;
 
+/**
+ * This is the Customer entity
+ * It will be used to store customers into the database
+ * <p>
+ * Lombok's annotations are used to avoid boilerplate code
+ *
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -43,13 +49,12 @@ public class Customer implements Serializable {
 
     @Override
     public final boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        Class<?> oEffectiveClass = o instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         Customer customer = (Customer) o;
-        return getId() != null && Objects.equals(getId(), customer.getId());
+        return getId() != null && getId().equals(customer.getId());
     }
 
     @Override

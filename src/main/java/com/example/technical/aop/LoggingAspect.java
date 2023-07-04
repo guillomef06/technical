@@ -15,19 +15,43 @@ import org.springframework.util.StopWatch;
 
 import java.util.Arrays;
 
+/**
+ * <h1>This class will log the project activity</h1>
+ *
+ * Taking advantage of Spring AOP this class will bring
+ * additional behavior to existing code without modification of the code itself.
+ *
+ * @author Guillaume
+ */
 @Aspect
 @Component
 @Slf4j
 public class LoggingAspect {
 
+    /**
+     * This method is used to create a poincut for RestControllers
+     * The within PCD will match every bean with the @RestController annotation
+     * The method declaration is used as the pointcut signature
+     */
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void springRestControllerBeanPointCut() {
     }
 
+    /**
+     * This method is used to create a poincut for Services
+     * The within PCD will match every bean with the @Service annotation
+     * The method declaration is used as the pointcut signature
+     */
     @Pointcut("within(@org.springframework.stereotype.Service *)")
     public void springServiceBeanPointCut() {
     }
 
+    /**
+     * This advice will log args before the joinPoint will be executed
+     * within the rest
+     *
+     * @param joinPoint for the Before advice
+     */
     @Before("springRestControllerBeanPointCut()")
     public void logBeforeMethod(JoinPoint joinPoint) {
         if (log.isInfoEnabled()) {
@@ -38,6 +62,13 @@ public class LoggingAspect {
         }
     }
 
+    /**
+     * This advice will log objects after the JoinPoint will return
+     * within the rest layer
+     *
+     * @param joinPoint for the AfterReturning advice
+     * @param value is the Object returned by our joinPoint
+     */
     @AfterReturning(pointcut = "springRestControllerBeanPointCut()", returning = "value")
     public void logAfterMethod(JoinPoint joinPoint, Object value) {
         if (log.isInfoEnabled()) {
@@ -48,6 +79,12 @@ public class LoggingAspect {
         }
     }
 
+    /**
+     * This advice will log execution time of the joinPoint method
+     * within the rest layer
+     *
+     * @param joinPoint for the Around advice
+     */
     @Around("springRestControllerBeanPointCut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = null;
@@ -66,6 +103,12 @@ public class LoggingAspect {
         return result;
     }
 
+    /**
+     * This advice will log Exceptions within the service layer
+     *
+     * @param joinPoint for the AfterThrowing advice
+     * @param e that are thrown by the joinPoint
+     */
     @AfterThrowing(pointcut = "springServiceBeanPointCut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Exception e) {
         if (log.isErrorEnabled()) {

@@ -15,14 +15,15 @@ DATE 03/07/2023 */
 
 @SpringBootTest(classes = TestApplication.class)
 @ActiveProfiles("test")
-public class AppPropertiesResolverTest {
+class AppPropertiesResolverTest {
 
     @Autowired
     private AppPropertiesResolver appPropertiesResolver;
 
     @Test
-    public void testProperties() {
+    void testProperties() {
         assertEquals(18, appPropertiesResolver.getMinimumAge());
         assertEquals("FRANCE", appPropertiesResolver.getCountry());
+        assertEquals("Europe/Paris", appPropertiesResolver.getZoneId());
     }
 }

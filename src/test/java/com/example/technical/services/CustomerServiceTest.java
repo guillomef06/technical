@@ -8,13 +8,10 @@ import com.example.technical.models.response.CustomerResponseRemoteObject;
 import com.example.technical.repositories.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -29,7 +26,6 @@ PROJECT technical
 DATE 03/07/2023 */
 
 @SpringBootTest(classes = TestApplication.class)
-@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 class CustomerServiceTest {
 
@@ -45,7 +41,6 @@ class CustomerServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         customerResponse = new CustomerResponseRemoteObject("userName",
                 LocalDate.of(2000, Month.JULY, 3),
                 "France",
