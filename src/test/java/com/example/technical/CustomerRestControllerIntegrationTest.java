@@ -1,10 +1,7 @@
 package com.example.technical;
 
 import com.example.technical.controllers.CustomerRestController;
-import com.example.technical.exceptions.InvalidPhoneNumberException;
-import com.example.technical.exceptions.NotFoundException;
-import com.example.technical.exceptions.TooYoungException;
-import com.example.technical.exceptions.WrongCountryException;
+import com.example.technical.exceptions.*;
 import com.example.technical.models.entities.Gender;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,6 +68,15 @@ class CustomerRestControllerIntegrationTest {
         customerRequest.setPhoneNumber("XXX");
 
         assertThatExceptionOfType(InvalidPhoneNumberException.class).isThrownBy(() -> customerRestController.registerCustomer(customerRequest));
+    }
+
+    @Test
+    void registerCustomerAlreadyRegistered() {
+        customerRequest.setUserName("hello");
+        customerRequest.setDateOfBirth(LocalDate.of(2000, 7,7));
+        customerRequest.setCountry("France");
+
+        assertThatExceptionOfType(CustomerAlreadyRegisteredException.class).isThrownBy(() -> customerRestController.registerCustomer(customerRequest));
     }
 
     @Test
