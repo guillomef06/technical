@@ -3,10 +3,6 @@ package com.example.technical.exceptions;
 /**
  * The type Customer already registered exception.
  */
-/* FILE CustomerAlreadyRegisteredException
-AUTHOR Guillaume
-PROJECT technical
-DATE 02/07/2023 */
 public class CustomerAlreadyRegisteredException extends RuntimeException {
 
     /**

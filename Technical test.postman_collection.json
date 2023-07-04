@@ -12,7 +12,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/customer/1",
+					"raw": "http://localhost:8080/api/v1/customers/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -21,7 +21,7 @@
 					"path": [
 						"api",
 						"v1",
-						"customer",
+						"customers",
 						"1"
 					]
 				}
@@ -43,7 +43,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/customer/register",
+					"raw": "http://localhost:8080/api/v1/customers/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -52,8 +52,8 @@
 					"path": [
 						"api",
 						"v1",
-						"customer",
-						"register"
+						"customers",
+						""
 					]
 				}
 			},
@@ -65,7 +65,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/customer/",
+					"raw": "http://localhost:8080/api/v1/customers/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -74,7 +74,7 @@
 					"path": [
 						"api",
 						"v1",
-						"customer",
+						"customers",
 						""
 					]
 				}

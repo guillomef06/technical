@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/* FILE UserRestController
-AUTHOR Guillaume
-PROJECT technical
-DATE 29/06/2023 */
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * This REST controller exposes services related to customers
@@ -21,8 +18,8 @@ DATE 29/06/2023 */
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "api/v1/customer/")
-public class CustomerRestController implements ICustomerRestController {
+@RequestMapping(path = "api/v1/customers/")
+public class CustomerRestController {
 
     /**
      * The service layer where all the business logic is held
@@ -36,9 +33,8 @@ public class CustomerRestController implements ICustomerRestController {
      * @return userResponse is sent if the operation is successful
      * with the HTTP status code 201
      */
-    @PostMapping("register")
+    @PostMapping(value = "", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @Override
     public CustomerResponseRemoteObject registerCustomer(@Valid @RequestBody CustomerRequestRemoteObject userRequest) {
         return this.userService.registerCustomer(userRequest);
     }
@@ -48,8 +44,7 @@ public class CustomerRestController implements ICustomerRestController {
      * @param id is the customer id we get through the path variable
      * @return a CustomerResponseRemoteObject with the HTTP status code 200
      */
-    @GetMapping("{id}")
-    @Override
+    @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
     public CustomerResponseRemoteObject getCustomer(@PathVariable("id") Long id) {
         return this.userService.getCustomer(id);
     }
@@ -59,8 +54,7 @@ public class CustomerRestController implements ICustomerRestController {
      *
      * @return a ArrayList of customers
      */
-    @GetMapping("")
-    @Override
+    @GetMapping(value = "", produces = APPLICATION_JSON_VALUE)
     public List<CustomerResponseRemoteObject> getAllCustomers() {
         return this.userService.getAllCustomers();
     }

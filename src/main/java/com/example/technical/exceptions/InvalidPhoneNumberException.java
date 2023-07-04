@@ -3,10 +3,6 @@ package com.example.technical.exceptions;
 /**
  * The type Invalid phone number exception.
  */
-/* FILE InvalidPhoneNumberException
-AUTHOR Guillaume
-PROJECT technical
-DATE 02/07/2023 */
 public class InvalidPhoneNumberException extends RuntimeException {
 
     /**

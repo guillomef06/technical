@@ -8,11 +8,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/* FILE AppPropertiesResolverTest
-AUTHOR Guillaume
-PROJECT technical
-DATE 03/07/2023 */
-
 @SpringBootTest(classes = TestApplication.class)
 @ActiveProfiles("test")
 class AppPropertiesResolverTest {

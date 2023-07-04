@@ -1,10 +1,5 @@
 package com.example.technical.aop;
 
-/* FILE LoggingAspect
-AUTHOR Guillaume
-PROJECT technical
-DATE 02/07/2023 */
-
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;

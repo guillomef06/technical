@@ -1,10 +1,5 @@
 package com.example.technical.exceptions;
 
-/* FILE RestExceptionsHandler
-AUTHOR Guillaume
-PROJECT technical
-DATE 29/06/2023 */
-
 import com.example.technical.config.AppPropertiesResolver;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +28,24 @@ public class RestExceptionsHandler {
     private final AppPropertiesResolver appPropertiesResolver;
 
     /**
-     * Handle not found exception rest exception message.
+     * Handle generic exception
      *
-     * @param e the e
+     * @param e the exception
+     * @return the rest exception message
+     */
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestExceptionMessage handleException(Exception e) {
+        if (log.isErrorEnabled()) {
+                log.error("Unexpected error has occurred: {}", e.getMessage());
+        }
+        return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
+    }
+
+    /**
+     * Handle not found exception
+     *
+     * @param e the exception
      * @return the rest exception message
      */
     @ExceptionHandler(value = {NotFoundException.class})
@@ -45,9 +55,9 @@ public class RestExceptionsHandler {
     }
 
     /**
-     * Handle method argument not valid exception rest exception message.
+     * Handle method argument not valid exception
      *
-     * @param e the e
+     * @param e the exception
      * @return the rest exception message
      */
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
@@ -60,9 +70,9 @@ public class RestExceptionsHandler {
     }
 
     /**
-     * Handle constraint violation exception rest exception message.
+     * Handle constraint violation exception
      *
-     * @param e the e
+     * @param e the exception
      * @return the rest exception message
      */
     @ExceptionHandler(value = {ConstraintViolationException.class})
@@ -72,9 +82,9 @@ public class RestExceptionsHandler {
     }
 
     /**
-     * Handle too young exception rest exception message.
+     * Handle too young exception
      *
-     * @param e the e
+     * @param e the exception
      * @return the rest exception message
      */
     @ExceptionHandler(value = {TooYoungException.class})
@@ -84,21 +94,21 @@ public class RestExceptionsHandler {
     }
 
     /**
-     * Handle too young exception rest exception message.
+     * Handle wrong country exception
      *
-     * @param e the e
+     * @param e the exception
      * @return the rest exception message
      */
     @ExceptionHandler(value = {WrongCountryException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public RestExceptionMessage handleTooYoungException(WrongCountryException e) {
+    public RestExceptionMessage handleWrongCountryException(WrongCountryException e) {
         return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 
     /**
-     * Handle customer already registered exception rest exception message.
+     * Handle customer already registered exception
      *
-     * @param e the e
+     * @param e the exception
      * @return the rest exception message
      */
     @ExceptionHandler(value = {CustomerAlreadyRegisteredException.class})
@@ -107,10 +117,11 @@ public class RestExceptionsHandler {
         return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 
+
     /**
-     * Handle invalid phone number exception rest exception message.
+     * Handle invalid phone number exception
      *
-     * @param e the e
+     * @param e the exception
      * @return the rest exception message
      */
     @ExceptionHandler(value = {InvalidPhoneNumberException.class})

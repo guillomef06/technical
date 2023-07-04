@@ -8,10 +8,6 @@ import java.util.List;
 /**
  * The interface Customer service.
  */
-/* FILE IUserService
-AUTHOR Guillaume
-PROJECT technical
-DATE 29/06/2023 */
 public interface ICustomerService {
 
     /**

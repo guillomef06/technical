@@ -12,11 +12,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-/* FILE UserRequestRemoteObject
-AUTHOR Guillaume
-PROJECT technical
-DATE 29/06/2023 */
-
 /**
  * This is the DTO we receive for the POST request
  * Note that the Valid annotation inside the Rest controller's method

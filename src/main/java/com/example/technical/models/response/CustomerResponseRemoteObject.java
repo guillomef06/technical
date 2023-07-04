@@ -9,11 +9,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-/* FILE UserResponseRemoteObject
-AUTHOR Guillaume
-PROJECT technical
-DATE 29/06/2023 */
-
 /**
  * This is the DTO we send for the GET request
  * The JsonInclude annotation specify that only

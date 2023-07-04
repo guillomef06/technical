@@ -1,10 +1,5 @@
 package com.example.technical.services;
 
-/* FILE UserService
-AUTHOR Guillaume
-PROJECT technical
-DATE 29/06/2023 */
-
 import com.example.technical.config.AppPropertiesResolver;
 import com.example.technical.exceptions.*;
 import com.example.technical.models.entities.Customer;

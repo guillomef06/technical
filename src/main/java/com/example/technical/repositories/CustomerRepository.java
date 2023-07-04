@@ -6,11 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 
-/* FILE IUserRepository
-AUTHOR Guillaume
-PROJECT technical
-DATE 29/06/2023 */
-
 /**
  * This is the repository used for database operations
  * it extends JpaRepository to fully benefit Spring framework
@@ -18,9 +13,9 @@ DATE 29/06/2023 */
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     /**
-     * Exists by user name and date of birth boolean.
+     * Exists by username and date of birth boolean.
      *
-     * @param userName    the user name
+     * @param userName    the username
      * @param dateOfBirth the date of birth
      * @return the boolean
      */

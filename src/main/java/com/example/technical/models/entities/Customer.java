@@ -1,13 +1,7 @@
 package com.example.technical.models.entities;
 
-/* FILE User
-AUTHOR Guillaume
-PROJECT technical
-DATE 29/06/2023 */
-
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -46,19 +40,4 @@ public class Customer implements Serializable {
 
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
-
-    @Override
-    public final boolean equals(Object o) {
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        Customer customer = (Customer) o;
-        return getId() != null && getId().equals(customer.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return getClass().hashCode();
-    }
 }
