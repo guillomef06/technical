@@ -1,7 +1,9 @@
 package com.example.technical;
 
 import com.example.technical.controllers.CustomerRestController;
+import com.example.technical.exceptions.InvalidPhoneNumberException;
 import com.example.technical.exceptions.NotFoundException;
+import com.example.technical.exceptions.TooYoungException;
 import com.example.technical.exceptions.WrongCountryException;
 import com.example.technical.models.entities.Gender;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
@@ -51,10 +53,24 @@ class CustomerRestControllerIntegrationTest {
     }
 
     @Test
-    void registerCustomerTooYoung() {
+    void registerCustomerWrongCountry() {
         customerRequest.setCountry("Italia");
 
         assertThatExceptionOfType(WrongCountryException.class).isThrownBy(() -> customerRestController.registerCustomer(customerRequest));
+    }
+
+    @Test
+    void registerCustomerTooYoung() {
+        customerRequest.setDateOfBirth(LocalDate.of(2010,Month.APRIL,10));
+
+        assertThatExceptionOfType(TooYoungException.class).isThrownBy(() -> customerRestController.registerCustomer(customerRequest));
+    }
+
+    @Test
+    void registerCustomerInvalidPhoneNumber() {
+        customerRequest.setPhoneNumber("XXX");
+
+        assertThatExceptionOfType(InvalidPhoneNumberException.class).isThrownBy(() -> customerRestController.registerCustomer(customerRequest));
     }
 
     @Test

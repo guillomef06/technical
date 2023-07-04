@@ -24,6 +24,15 @@ class CustomerRepositoryTest {
     CustomerRepository customerRepository;
 
     @Test
+    void testEquals() {
+        Customer hello = customerRepository.findById(1L).orElseThrow();
+        Customer test = customerRepository.findById(2L).orElseThrow();
+
+        assertThat(hello.toString()).contains("hello");
+        assertThat(hello.equals(test)).isFalse();
+    }
+
+    @Test
     void testSaveFindExistDelete() {
         Customer customer = new Customer(null,
                 "userName",

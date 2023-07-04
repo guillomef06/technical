@@ -1,2 +1,2 @@
 INSERT INTO customer (id, user_name, date_of_birth, country) VALUES (NEXTVAL('customer_seq'), 'hello', '2000-07-07', 'France');
-INSERT INTO customer (id, user_name, date_of_birth, country) VALUES (NEXTVAL('customer_seq'), 'Test', '2000-07-07', 'France');
+INSERT INTO customer (id, user_name, date_of_birth, country) VALUES (NEXTVAL('customer_seq'), 'test', '2000-07-07', 'France');
