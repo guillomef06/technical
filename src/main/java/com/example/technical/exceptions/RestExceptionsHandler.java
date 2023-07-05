@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * This is the RestController advice that will globally handle
@@ -63,10 +65,11 @@ public class RestExceptionsHandler {
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RestExceptionMessage handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        List<String> errors = e.getBindingResult().getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
         if (log.isWarnEnabled()) {
-            log.warn("MethodArgumentNotValidException: {}", e.getLocalizedMessage());
+            log.warn("MethodArgumentNotValidException: {}", errors);
         }
-        return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
+        return new RestExceptionMessage(errors.toString(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 
     /**

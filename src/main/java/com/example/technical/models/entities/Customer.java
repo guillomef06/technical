@@ -21,8 +21,8 @@ import java.time.LocalDate;
 public class Customer implements Serializable {
 
     @Id
-    @SequenceGenerator(name = "customer_seq",initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "customer_seq")
+    @SequenceGenerator(name = "customer_seq",initialValue = 1, allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, length = 64)
