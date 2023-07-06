@@ -45,6 +45,10 @@ class CustomerRestControllerIntegrationTest {
         CustomerResponseRemoteObject found = customerRestController.registerCustomer(customerRequest);
 
         assertThat(found.getUserName()).isEqualTo(customerRequest.getUserName());
+        assertThat(found.getCountry()).isEqualTo(customerRequest.getCountry());
+        assertThat(found.getPhoneNumber()).isEqualTo(customerRequest.getPhoneNumber());
+        assertThat(found.getDateOfBirth()).isEqualTo(customerRequest.getDateOfBirth());
+        assertThat(found.getGender()).isEqualTo(customerRequest.getGender());
     }
 
     @Test

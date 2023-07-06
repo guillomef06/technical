@@ -6,8 +6,6 @@ import com.example.technical.models.entities.Gender;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
 import com.example.technical.models.response.CustomerResponseRemoteObject;
 import com.example.technical.services.CustomerService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.technical.config.TestUtils.asJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -61,14 +60,6 @@ class CustomerRestControllerTest {
                 "France",
                 "0600000000",
                 Gender.FEMALE);
-    }
-
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Test
