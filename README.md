@@ -1,8 +1,9 @@
 ># Project introduction
 >
 > This Java project is a REST API that exposes the following services
-> - POST http://localhost:8080/api/v1/customer/register
-> - GET http://localhost:8080/api/v1/customer/{id}
+> - POST http://localhost:8080/api/v1/customers
+> - GET http://localhost:8080/api/v1/customers/{id}
+> - GET http://localhost:8080/api/v1/customers
 
 >## Project dependencies
 >
