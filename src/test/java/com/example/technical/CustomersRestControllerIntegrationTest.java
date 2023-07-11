@@ -1,6 +1,6 @@
 package com.example.technical;
 
-import com.example.technical.controllers.CustomerRestController;
+import com.example.technical.controllers.CustomersRestController;
 import com.example.technical.exceptions.*;
 import com.example.technical.models.entities.Gender;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
@@ -19,10 +19,10 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest(classes = TestApplication.class)
 @ActiveProfiles("test")
-class CustomerRestControllerIntegrationTest {
+class CustomersRestControllerIntegrationTest {
 
     @Autowired
-    private CustomerRestController customerRestController;
+    private CustomersRestController customersRestController;
 
     private CustomerRequestRemoteObject customerRequest;
 
@@ -37,12 +37,12 @@ class CustomerRestControllerIntegrationTest {
 
     @Test
     void contextLoads() {
-        assertThat(customerRestController).isNotNull();
+        assertThat(customersRestController).isNotNull();
     }
 
     @Test
     void registerCustomer() {
-        CustomerResponseRemoteObject found = customerRestController.registerCustomer(customerRequest);
+        CustomerResponseRemoteObject found = customersRestController.registerCustomer(customerRequest);
 
         assertThat(found.getUserName()).isEqualTo(customerRequest.getUserName());
         assertThat(found.getCountry()).isEqualTo(customerRequest.getCountry());
@@ -55,21 +55,21 @@ class CustomerRestControllerIntegrationTest {
     void registerCustomerWrongCountry() {
         customerRequest.setCountry("Italia");
 
-        assertThatExceptionOfType(WrongCountryException.class).isThrownBy(() -> customerRestController.registerCustomer(customerRequest));
+        assertThatExceptionOfType(WrongCountryException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
     }
 
     @Test
     void registerCustomerTooYoung() {
         customerRequest.setDateOfBirth(LocalDate.of(2010,Month.APRIL,10));
 
-        assertThatExceptionOfType(TooYoungException.class).isThrownBy(() -> customerRestController.registerCustomer(customerRequest));
+        assertThatExceptionOfType(TooYoungException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
     }
 
     @Test
     void registerCustomerInvalidPhoneNumber() {
         customerRequest.setPhoneNumber("XXX");
 
-        assertThatExceptionOfType(InvalidPhoneNumberException.class).isThrownBy(() -> customerRestController.registerCustomer(customerRequest));
+        assertThatExceptionOfType(InvalidPhoneNumberException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
     }
 
     @Test
@@ -78,21 +78,21 @@ class CustomerRestControllerIntegrationTest {
         customerRequest.setDateOfBirth(LocalDate.of(2000, 7,7));
         customerRequest.setCountry("France");
 
-        assertThatExceptionOfType(CustomerAlreadyRegisteredException.class).isThrownBy(() -> customerRestController.registerCustomer(customerRequest));
+        assertThatExceptionOfType(CustomerAlreadyRegisteredException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
     }
 
     @Test
     void getCustomer() {
-        assertThat(customerRestController.getCustomer(1L)).isNotNull();
+        assertThat(customersRestController.getCustomer(1L)).isNotNull();
     }
 
     @Test
     void customerNotFound() {
-        assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> customerRestController.getCustomer(10L));
+        assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> customersRestController.getCustomer(10L));
     }
 
     @Test
     void getAllCustomers() {
-        assertThat(customerRestController.getAllCustomers()).isNotEmpty();
+        assertThat(customersRestController.getAllCustomers()).isNotEmpty();
     }
 }

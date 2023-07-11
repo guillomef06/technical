@@ -2,12 +2,12 @@ package com.example.technical.services;
 
 import com.example.technical.config.AppPropertiesResolver;
 import com.example.technical.exceptions.*;
+import com.example.technical.mappers.CustomerMapper;
 import com.example.technical.models.entities.Customer;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
 import com.example.technical.models.response.CustomerResponseRemoteObject;
-import com.example.technical.repositories.CustomerRepository;
+import com.example.technical.repositories.CustomersRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  */
 @Service
 @RequiredArgsConstructor
-public class CustomerService implements ICustomerService {
+public class CustomersService implements ICustomersService {
 
     /**
      * Configuration file
@@ -32,12 +32,12 @@ public class CustomerService implements ICustomerService {
     /**
      * The repository
      */
-    private final CustomerRepository customerRepository;
+    private final CustomersRepository customersRepository;
 
     /**
      * The mapper between DTO and Entities
      */
-    private final ModelMapper modelMapper;
+    private final CustomerMapper customerMapper;
 
     /**
      * Check if the String is a valid phone number
@@ -71,14 +71,14 @@ public class CustomerService implements ICustomerService {
         if (customerRequest.getPhoneNumber() != null && !isPhoneNumber(customerRequest.getPhoneNumber())) {
             throw new InvalidPhoneNumberException("Phone number must contain 10 digits");
         }
-        if (this.customerRepository.existsByUserNameAndDateOfBirth(
+        if (this.customersRepository.existsByUserNameAndDateOfBirth(
                 customerRequest.getUserName(),
                 customerRequest.getDateOfBirth())) {
             throw new CustomerAlreadyRegisteredException("This customer is already registered");
         }
-        Customer newCustomer = this.modelMapper.map(customerRequest, Customer.class);
-        newCustomer = this.customerRepository.save(newCustomer);
-        return this.modelMapper.map(newCustomer, CustomerResponseRemoteObject.class);
+        Customer newCustomer = customerMapper.mapRequestToEntity(customerRequest);
+        newCustomer = this.customersRepository.save(newCustomer);
+        return this.customerMapper.mapEntityToResponse(newCustomer);
     }
 
     /**
@@ -89,11 +89,11 @@ public class CustomerService implements ICustomerService {
     @Override
     @Cacheable("customer")
     public CustomerResponseRemoteObject getCustomer(Long id) {
-        Optional<Customer> optCustomer = customerRepository.findById(id);
+        Optional<Customer> optCustomer = customersRepository.findById(id);
         if (optCustomer.isEmpty()) {
             throw new NotFoundException("User with id " + id + " was not found");
         }
-        return this.modelMapper.map(optCustomer.get(), CustomerResponseRemoteObject.class);
+        return this.customerMapper.mapEntityToResponse(optCustomer.get());
     }
 
     /**
@@ -103,8 +103,7 @@ public class CustomerService implements ICustomerService {
      */
     @Override
     public List<CustomerResponseRemoteObject> getAllCustomers() {
-        List<Customer> customers = customerRepository.findAll();
-        return customers.stream().map(customer ->
-                        modelMapper.map(customer, CustomerResponseRemoteObject.class)).toList();
+        List<Customer> customers = customersRepository.findAll();
+        return customers.stream().map(this.customerMapper::mapEntityToResponse).toList();
     }
 }

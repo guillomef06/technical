@@ -2,7 +2,7 @@ package com.example.technical.controllers;
 
 import com.example.technical.models.request.CustomerRequestRemoteObject;
 import com.example.technical.models.response.CustomerResponseRemoteObject;
-import com.example.technical.services.ICustomerService;
+import com.example.technical.services.ICustomersService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,12 +19,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "api/v1/customers/")
-public class CustomerRestController {
+public class CustomersRestController {
 
     /**
      * The service layer where all the business logic is held
      */
-    private final ICustomerService userService;
+    private final ICustomersService userService;
 
 
     /**
@@ -59,4 +59,3 @@ public class CustomerRestController {
         return this.userService.getAllCustomers();
     }
 }
-

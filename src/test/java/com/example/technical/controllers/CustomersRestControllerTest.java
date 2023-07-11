@@ -5,7 +5,7 @@ import com.example.technical.exceptions.*;
 import com.example.technical.models.entities.Gender;
 import com.example.technical.models.request.CustomerRequestRemoteObject;
 import com.example.technical.models.response.CustomerResponseRemoteObject;
-import com.example.technical.services.CustomerService;
+import com.example.technical.services.CustomersService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +31,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-@WebMvcTest(value = CustomerRestController.class)
+@WebMvcTest(value = CustomersRestController.class)
 @EnableConfigurationProperties(value = AppPropertiesResolver.class)
 @ActiveProfiles("test")
-class CustomerRestControllerTest {
+class CustomersRestControllerTest {
 
     @MockBean
-    private CustomerService customerService;
+    private CustomersService customersService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -64,7 +64,7 @@ class CustomerRestControllerTest {
 
     @Test
     void registerCustomerCreated() throws Exception {
-        when(customerService.registerCustomer(customerRequest)).thenReturn(customerResponse);
+        when(customersService.registerCustomer(customerRequest)).thenReturn(customerResponse);
 
         mockMvc.perform(post("/api/v1/customers/")
                         .content(asJsonString(customerRequest))
@@ -80,7 +80,7 @@ class CustomerRestControllerTest {
 
     @Test
     void registerCustomerTooYoung() throws Exception {
-        when(customerService.registerCustomer(customerRequest)).thenThrow(TooYoungException.class);
+        when(customersService.registerCustomer(customerRequest)).thenThrow(TooYoungException.class);
 
         mockMvc.perform(post("/api/v1/customers/")
                         .content(asJsonString(customerRequest))
@@ -92,7 +92,7 @@ class CustomerRestControllerTest {
 
     @Test
     void registerCustomerWrongCountry() throws Exception {
-        when(customerService.registerCustomer(customerRequest)).thenThrow(WrongCountryException.class);
+        when(customersService.registerCustomer(customerRequest)).thenThrow(WrongCountryException.class);
 
         mockMvc.perform(post("/api/v1/customers/")
                         .content(asJsonString(customerRequest))
@@ -104,7 +104,7 @@ class CustomerRestControllerTest {
 
     @Test
     void registerCustomerInvalidPhoneNumber() throws Exception {
-        when(customerService.registerCustomer(customerRequest)).thenThrow(InvalidPhoneNumberException.class);
+        when(customersService.registerCustomer(customerRequest)).thenThrow(InvalidPhoneNumberException.class);
 
         mockMvc.perform(post("/api/v1/customers/")
                         .content(asJsonString(customerRequest))
@@ -116,7 +116,7 @@ class CustomerRestControllerTest {
 
     @Test
     void registerCustomerAlreadyRegistered() throws Exception {
-        when(customerService.registerCustomer(customerRequest)).thenThrow(CustomerAlreadyRegisteredException.class);
+        when(customersService.registerCustomer(customerRequest)).thenThrow(CustomerAlreadyRegisteredException.class);
 
         mockMvc.perform(post("/api/v1/customers/")
                         .content(asJsonString(customerRequest))
@@ -128,7 +128,7 @@ class CustomerRestControllerTest {
 
     @Test
     void getCustomerSuccess() throws Exception {
-        when(customerService.getCustomer(1L)).thenReturn(customerResponse);
+        when(customersService.getCustomer(1L)).thenReturn(customerResponse);
 
         mockMvc.perform(get("/api/v1/customers/{id}", 1L)
                         .accept(MediaType.APPLICATION_JSON))
@@ -142,7 +142,7 @@ class CustomerRestControllerTest {
 
     @Test
     void getCustomerNotFound() throws Exception {
-        when(customerService.getCustomer(1L)).thenThrow(NotFoundException.class);
+        when(customersService.getCustomer(1L)).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/api/v1/customers/{id}", 1L)
                 .accept(MediaType.APPLICATION_JSON))
@@ -154,7 +154,7 @@ class CustomerRestControllerTest {
     void getAllCustomer() throws Exception {
         List<CustomerResponseRemoteObject> all = new ArrayList<>();
         all.add(customerResponse);
-        when(customerService.getAllCustomers()).thenReturn(all);
+        when(customersService.getAllCustomers()).thenReturn(all);
 
         mockMvc.perform(get("/api/v1/customers/")
                 .accept(MediaType.APPLICATION_JSON))

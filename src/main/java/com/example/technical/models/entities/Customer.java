@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @Entity
+@Table(name = "customers")
 public class Customer implements Serializable {
 
     @Id

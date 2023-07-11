@@ -13,14 +13,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class CustomerRepositoryTest {
+class CustomersRepositoryTest {
 
     @Autowired
-    CustomerRepository customerRepository;
+    CustomersRepository customersRepository;
 
     @Test
     void testToString() {
-        Customer hello = customerRepository.findById(1L).orElseThrow();
+        Customer hello = customersRepository.findById(1L).orElseThrow();
 
         assertThat(hello.toString()).contains("hello");
     }
@@ -34,12 +34,12 @@ class CustomerRepositoryTest {
                 "0600000000",
                 Gender.MALE);
 
-        customerRepository.save(customer);
+        customersRepository.save(customer);
 
-        assertThat(customerRepository.findAll()).hasSize(3);
-        assertThat(customerRepository.existsByUserNameAndDateOfBirth(customer.getUserName(), customer.getDateOfBirth())).isTrue();
+        assertThat(customersRepository.findAll()).hasSize(3);
+        assertThat(customersRepository.existsByUserNameAndDateOfBirth(customer.getUserName(), customer.getDateOfBirth())).isTrue();
 
-        customerRepository.deleteAll();
-        assertThat(customerRepository.findAll()).isEmpty();
+        customersRepository.deleteAll();
+        assertThat(customersRepository.findAll()).isEmpty();
     }
 }

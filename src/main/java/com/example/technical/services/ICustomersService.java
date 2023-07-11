@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The interface Customer service.
  */
-public interface ICustomerService {
+public interface ICustomersService {
 
     /**
      * Register customer customer request remote object.

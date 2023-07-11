@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * it extends JpaRepository to fully benefit Spring framework
  */
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
+public interface CustomersRepository extends JpaRepository<Customer, Long> {
     /**
      * Exists by username and date of birth boolean.
      *
