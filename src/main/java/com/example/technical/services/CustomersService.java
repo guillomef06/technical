@@ -1,11 +1,12 @@
 package com.example.technical.services;
 
 import com.example.technical.config.AppPropertiesResolver;
-import com.example.technical.exceptions.*;
+import com.example.technical.exceptions.BadRequestException;
+import com.example.technical.exceptions.NotFoundException;
 import com.example.technical.mappers.CustomerMapper;
 import com.example.technical.models.entities.Customer;
-import com.example.technical.models.request.CustomerRequestRemoteObject;
-import com.example.technical.models.response.CustomerResponseRemoteObject;
+import com.example.technical.models.request.CustomerRequest;
+import com.example.technical.models.response.CustomerResponse;
 import com.example.technical.repositories.CustomersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -50,6 +51,37 @@ public class CustomersService implements ICustomersService {
         return pattern.matcher(phoneNumber).matches();
     }
 
+    private void isCustomerAnAdult(LocalDate dateOfBirth) {
+        if (Period.between(dateOfBirth, LocalDate.now()).getYears() < appProperties.getMinimumAge()) {
+            throw new BadRequestException("Customer must be at least " + appProperties.getMinimumAge() + " years old to register");
+        }
+    }
+
+    private void isCustomerFromCountry(String country) {
+        if (!appProperties.getCountry().equalsIgnoreCase(country)) {
+            throw new BadRequestException("Customer must be from " + appProperties.getCountry() + " to register");
+        }
+    }
+
+    private void isCustomerValidPhoneNumber(String phoneNumber) {
+        if (phoneNumber != null && !isPhoneNumber(phoneNumber)) {
+            throw new BadRequestException("Phone number must contain 10 digits");
+        }
+    }
+
+    private void isCustomerAlreadyRegistered(String userName, LocalDate dateOfBirth) {
+        if (this.customersRepository.existsByUserNameAndDateOfBirth(userName, dateOfBirth)) {
+            throw new BadRequestException("This customer is already registered");
+        }
+    }
+
+    private void validateCustomer(CustomerRequest customerRequest) {
+        isCustomerAnAdult(customerRequest.getDateOfBirth());
+        isCustomerFromCountry(customerRequest.getCountry());
+        isCustomerValidPhoneNumber(customerRequest.getPhoneNumber());
+        isCustomerAlreadyRegistered(customerRequest.getUserName(), customerRequest.getDateOfBirth());
+    }
+
     /**
      * This method will check if the customer is
      * old enough
@@ -58,24 +90,11 @@ public class CustomersService implements ICustomersService {
      * if he is already registered
      * Then saved if it's a new customer
      * @param customerRequest is the DTO we receive
-     * @return CustomerResponseRemoteObject is sent once customer is saved
+     * @return CustomerResponse is sent once customer is saved
      */
     @Override
-    public CustomerResponseRemoteObject registerCustomer(CustomerRequestRemoteObject customerRequest) {
-        if (Period.between(customerRequest.getDateOfBirth(), LocalDate.now()).getYears() < appProperties.getMinimumAge()) {
-            throw new TooYoungException("Customer must be at least " + appProperties.getMinimumAge() + " years old to register");
-        }
-        if (!appProperties.getCountry().equalsIgnoreCase(customerRequest.getCountry())) {
-            throw new WrongCountryException("Customer must be from " + appProperties.getCountry() + " to register");
-        }
-        if (customerRequest.getPhoneNumber() != null && !isPhoneNumber(customerRequest.getPhoneNumber())) {
-            throw new InvalidPhoneNumberException("Phone number must contain 10 digits");
-        }
-        if (this.customersRepository.existsByUserNameAndDateOfBirth(
-                customerRequest.getUserName(),
-                customerRequest.getDateOfBirth())) {
-            throw new CustomerAlreadyRegisteredException("This customer is already registered");
-        }
+    public CustomerResponse registerCustomer(CustomerRequest customerRequest) {
+        validateCustomer(customerRequest);
         Customer newCustomer = customerMapper.mapRequestToEntity(customerRequest);
         newCustomer = this.customersRepository.save(newCustomer);
         return this.customerMapper.mapEntityToResponse(newCustomer);
@@ -84,11 +103,11 @@ public class CustomersService implements ICustomersService {
     /**
      * This method will retrieve the customer with his id
      * @param id used to find the customer
-     * @return CustomerResponseRemoteObject when customer is found
+     * @return CustomerResponse when customer is found
      */
     @Override
     @Cacheable("customer")
-    public CustomerResponseRemoteObject getCustomer(Long id) {
+    public CustomerResponse getCustomer(Long id) {
         Optional<Customer> optCustomer = customersRepository.findById(id);
         if (optCustomer.isEmpty()) {
             throw new NotFoundException("User with id " + id + " was not found");
@@ -99,10 +118,10 @@ public class CustomersService implements ICustomersService {
     /**
      * Gets all customers.
      *
-     * @return a List of CustomerResponseRemoteObject
+     * @return a List of CustomerResponse
      */
     @Override
-    public List<CustomerResponseRemoteObject> getAllCustomers() {
+    public List<CustomerResponse> getAllCustomers() {
         List<Customer> customers = customersRepository.findAll();
         return customers.stream().map(this.customerMapper::mapEntityToResponse).toList();
     }

@@ -1,7 +1,7 @@
 package com.example.technical.services;
 
-import com.example.technical.models.request.CustomerRequestRemoteObject;
-import com.example.technical.models.response.CustomerResponseRemoteObject;
+import com.example.technical.models.request.CustomerRequest;
+import com.example.technical.models.response.CustomerResponse;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface ICustomersService {
      * @param userRequest the user request
      * @return the customer response remote object
      */
-    CustomerResponseRemoteObject registerCustomer(CustomerRequestRemoteObject userRequest);
+    CustomerResponse registerCustomer(CustomerRequest userRequest);
 
     /**
      * Gets customer.
@@ -24,12 +24,12 @@ public interface ICustomersService {
      * @param id the id
      * @return the customer
      */
-    CustomerResponseRemoteObject getCustomer(Long id);
+    CustomerResponse getCustomer(Long id);
 
     /**
      * Gets all customers.
      *
      * @return a ArrayList of customers
      */
-    List<CustomerResponseRemoteObject> getAllCustomers();
+    List<CustomerResponse> getAllCustomers();
 }

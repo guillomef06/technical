@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CustomerResponseRemoteObject implements Serializable {
+public class CustomerResponse implements Serializable {
 
     private Long id;
 

@@ -36,6 +36,6 @@ public class Airport implements Serializable {
     @Column(name = "global_taxes", nullable = false, precision = 19, scale = 2)
     private BigDecimal globalTaxes;
 
-    @OneToMany(mappedBy = "startAirport", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "originAirport", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Flight> flights = new ArrayList<>();
 }

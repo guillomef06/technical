@@ -2,10 +2,13 @@ package com.example.technical.services;
 
 import com.example.technical.mappers.FlightMapper;
 import com.example.technical.models.entities.Flight;
-import com.example.technical.models.response.FlightResponseRemoteObject;
+import com.example.technical.models.response.FlightResponse;
 import com.example.technical.repositories.FlightsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,19 +17,50 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * The type Flights service.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class FlightsService implements IFlightsService {
 
+    /**
+     * The repository
+     */
     private final FlightsRepository flightsRepository;
 
+    /**
+     * The mapper between DTO and Entities
+     */
     private final FlightMapper flightMapper;
 
+    /**
+     * Gets all flights.
+     *
+     * @return the all flights
+     */
     @Override
-    public List<FlightResponseRemoteObject> getAllFlights() {
+    public List<FlightResponse> getAllFlights() {
         List<Flight> flights = flightsRepository.findAll();
         return flights.stream().map(this::calculatePrice).toList();
+    }
+
+    /**
+     * Gets flights from origin and destination iata codes.
+     *
+     * @param originIataCode      the origin iata code
+     * @param destinationIataCode the destination iata code
+     * @param page                the page
+     * @return the flights from origin and destination iata codes
+     */
+    @Override
+    public Page<FlightResponse> getFlightsFromOriginAndDestinationIataCodes(String originIataCode, String destinationIataCode, Pageable page) {
+        Page<Flight> flights = flightsRepository.findByOriginAirport_IataCodeAndDestinationAirport_IataCodeOrderByDepartureTimeAsc(
+                originIataCode,
+                destinationIataCode,
+                page);
+        return new PageImpl<>(flights.stream().map(flightMapper::mapEntityToResponse).toList(), page, flights.getTotalElements());
     }
 
     /**
@@ -35,11 +69,11 @@ public class FlightsService implements IFlightsService {
      *   multiplier le base price par les taxes ie: 100.000 * (1.080 + 1.100)
      *   gonlfer le price selon le nombre de jour restants avant le depart: x * (1 + ((100 - j restants) / 100))
      */
-    private FlightResponseRemoteObject calculatePrice(Flight flight) {
+    private FlightResponse calculatePrice(Flight flight) {
 
-        BigDecimal startGlobalTaxes = flight.getStartAirport().getGlobalTaxes();
+        BigDecimal originGlobalTaxes = flight.getOriginAirport().getGlobalTaxes();
         BigDecimal destGlobalTaxes = flight.getDestinationAirport().getGlobalTaxes();
-        BigDecimal taxesMult = startGlobalTaxes.add(destGlobalTaxes).add(BigDecimal.valueOf(100L));
+        BigDecimal taxesMult = originGlobalTaxes.add(destGlobalTaxes).add(BigDecimal.valueOf(100L));
         taxesMult = taxesMult.divide(BigDecimal.valueOf(100.00), RoundingMode.HALF_UP);
         long leftDays = Duration.between(LocalDateTime.now(), flight.getDepartureTime()).toDays();
         if (leftDays > 100L) {
@@ -49,11 +83,7 @@ public class FlightsService implements IFlightsService {
                 .add(BigDecimal.valueOf(1.000));
         BigDecimal price = flight.getBasePrice().multiply(taxesMult).multiply(periodMult).setScale(2, RoundingMode.HALF_UP);
 
-        /*
-        log.info("Flight base price: {}, taxes mult: {}, left days until flight: {}, period mult: {}, final price: {}",
-               flight.getBasePrice(), taxesMult, leftDays, periodMult, price);
-        */
-        FlightResponseRemoteObject response = this.flightMapper.mapEntityToResponse(flight);
+        FlightResponse response = flightMapper.mapEntityToResponse(flight);
         response.setPrice(price);
         return response;
     }

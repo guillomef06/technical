@@ -1,10 +1,11 @@
 package com.example.technical;
 
 import com.example.technical.controllers.CustomersRestController;
-import com.example.technical.exceptions.*;
+import com.example.technical.exceptions.BadRequestException;
+import com.example.technical.exceptions.NotFoundException;
 import com.example.technical.models.entities.Gender;
-import com.example.technical.models.request.CustomerRequestRemoteObject;
-import com.example.technical.models.response.CustomerResponseRemoteObject;
+import com.example.technical.models.request.CustomerRequest;
+import com.example.technical.models.response.CustomerResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,11 @@ class CustomersRestControllerIntegrationTest {
     @Autowired
     private CustomersRestController customersRestController;
 
-    private CustomerRequestRemoteObject customerRequest;
+    private CustomerRequest customerRequest;
 
     @BeforeEach
     void setUp() {
-        customerRequest = new CustomerRequestRemoteObject("userName",
+        customerRequest = new CustomerRequest("userName",
                 LocalDate.of(2000, Month.JULY, 3),
                 "France",
                 "0600000000",
@@ -42,7 +43,7 @@ class CustomersRestControllerIntegrationTest {
 
     @Test
     void registerCustomer() {
-        CustomerResponseRemoteObject found = customersRestController.registerCustomer(customerRequest);
+        CustomerResponse found = customersRestController.registerCustomer(customerRequest);
 
         assertThat(found.getUserName()).isEqualTo(customerRequest.getUserName());
         assertThat(found.getCountry()).isEqualTo(customerRequest.getCountry());
@@ -55,21 +56,21 @@ class CustomersRestControllerIntegrationTest {
     void registerCustomerWrongCountry() {
         customerRequest.setCountry("Italia");
 
-        assertThatExceptionOfType(WrongCountryException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
+        assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
     }
 
     @Test
     void registerCustomerTooYoung() {
         customerRequest.setDateOfBirth(LocalDate.of(2010,Month.APRIL,10));
 
-        assertThatExceptionOfType(TooYoungException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
+        assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
     }
 
     @Test
     void registerCustomerInvalidPhoneNumber() {
         customerRequest.setPhoneNumber("XXX");
 
-        assertThatExceptionOfType(InvalidPhoneNumberException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
+        assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
     }
 
     @Test
@@ -78,7 +79,7 @@ class CustomersRestControllerIntegrationTest {
         customerRequest.setDateOfBirth(LocalDate.of(2000, 7,7));
         customerRequest.setCountry("France");
 
-        assertThatExceptionOfType(CustomerAlreadyRegisteredException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
+        assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> customersRestController.registerCustomer(customerRequest));
     }
 
     @Test

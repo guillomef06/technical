@@ -1,10 +1,11 @@
 package com.example.technical.controllers;
 
 import com.example.technical.config.AppPropertiesResolver;
-import com.example.technical.exceptions.*;
+import com.example.technical.exceptions.BadRequestException;
+import com.example.technical.exceptions.NotFoundException;
 import com.example.technical.models.entities.Gender;
-import com.example.technical.models.request.CustomerRequestRemoteObject;
-import com.example.technical.models.response.CustomerResponseRemoteObject;
+import com.example.technical.models.request.CustomerRequest;
+import com.example.technical.models.response.CustomerResponse;
 import com.example.technical.services.CustomersService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-@WebMvcTest(value = CustomersRestController.class)
+@WebMvcTest(controllers = CustomersRestController.class)
 @EnableConfigurationProperties(value = AppPropertiesResolver.class)
 @ActiveProfiles("test")
 class CustomersRestControllerTest {
@@ -42,20 +43,20 @@ class CustomersRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static CustomerResponseRemoteObject customerResponse;
+    private static CustomerResponse customerResponse;
 
-    private static CustomerRequestRemoteObject customerRequest;
+    private static CustomerRequest customerRequest;
 
     @BeforeAll
     static void setupBeforeAll() {
-        customerResponse = new CustomerResponseRemoteObject(null,
+        customerResponse = new CustomerResponse(null,
                 "Alexa",
                 LocalDate.of(2000, 1,1),
                 "France",
                 "0600000000",
                 Gender.FEMALE);
 
-        customerRequest = new CustomerRequestRemoteObject("Alexa",
+        customerRequest = new CustomerRequest("Alexa",
                 LocalDate.of(2000, 1,1),
                 "France",
                 "0600000000",
@@ -79,50 +80,14 @@ class CustomersRestControllerTest {
     }
 
     @Test
-    void registerCustomerTooYoung() throws Exception {
-        when(customersService.registerCustomer(customerRequest)).thenThrow(TooYoungException.class);
+    void registerCustomerBadRequestException() throws Exception {
+        when(customersService.registerCustomer(customerRequest)).thenThrow(BadRequestException.class);
 
         mockMvc.perform(post("/api/v1/customers/")
                         .content(asJsonString(customerRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(TooYoungException.class))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void registerCustomerWrongCountry() throws Exception {
-        when(customersService.registerCustomer(customerRequest)).thenThrow(WrongCountryException.class);
-
-        mockMvc.perform(post("/api/v1/customers/")
-                        .content(asJsonString(customerRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(WrongCountryException.class))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void registerCustomerInvalidPhoneNumber() throws Exception {
-        when(customersService.registerCustomer(customerRequest)).thenThrow(InvalidPhoneNumberException.class);
-
-        mockMvc.perform(post("/api/v1/customers/")
-                        .content(asJsonString(customerRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(InvalidPhoneNumberException.class))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void registerCustomerAlreadyRegistered() throws Exception {
-        when(customersService.registerCustomer(customerRequest)).thenThrow(CustomerAlreadyRegisteredException.class);
-
-        mockMvc.perform(post("/api/v1/customers/")
-                        .content(asJsonString(customerRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(CustomerAlreadyRegisteredException.class))
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(BadRequestException.class))
                 .andExpect(status().isBadRequest());
     }
 
@@ -152,7 +117,7 @@ class CustomersRestControllerTest {
 
     @Test
     void getAllCustomer() throws Exception {
-        List<CustomerResponseRemoteObject> all = new ArrayList<>();
+        List<CustomerResponse> all = new ArrayList<>();
         all.add(customerResponse);
         when(customersService.getAllCustomers()).thenReturn(all);
 

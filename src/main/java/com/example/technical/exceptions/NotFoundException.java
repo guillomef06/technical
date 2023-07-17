@@ -1,7 +1,7 @@
 package com.example.technical.exceptions;
 
 /**
- * The type Not found exception.
+ * The Not found exception.
  */
 public class NotFoundException extends RuntimeException {
 

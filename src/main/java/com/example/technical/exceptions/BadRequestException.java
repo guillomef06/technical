@@ -3,14 +3,14 @@ package com.example.technical.exceptions;
 /**
  * The type Too young exception.
  */
-public class TooYoungException extends RuntimeException {
+public class BadRequestException extends RuntimeException {
 
     /**
      * Instantiates a new Too young exception.
      *
      * @param message the message
      */
-    public TooYoungException(String message) {
+    public BadRequestException(String message) {
         super(message);
     }
 }

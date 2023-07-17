@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AirportResponseRemoteObject implements Serializable {
+public class AirportResponse implements Serializable {
 
     private String iataCode;
 

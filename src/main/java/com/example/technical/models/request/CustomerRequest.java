@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CustomerRequestRemoteObject implements Serializable {
+public class CustomerRequest implements Serializable {
 
     @NotNull(message = "userName must not be null")
     @NotBlank(message = "userName must not be blank")

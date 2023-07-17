@@ -1,7 +1,7 @@
 package com.example.technical.controllers;
 
-import com.example.technical.models.request.CustomerRequestRemoteObject;
-import com.example.technical.models.response.CustomerResponseRemoteObject;
+import com.example.technical.models.request.CustomerRequest;
+import com.example.technical.models.response.CustomerResponse;
 import com.example.technical.services.ICustomersService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,26 +26,25 @@ public class CustomersRestController {
      */
     private final ICustomersService userService;
 
-
     /**
      * This method is mapped to POST requests to /register
-     * @param userRequest is the dto we receive in Json format
+     * @param customerRequest is the dto we receive in Json format
      * @return userResponse is sent if the operation is successful
      * with the HTTP status code 201
      */
     @PostMapping(value = "", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerResponseRemoteObject registerCustomer(@Valid @RequestBody CustomerRequestRemoteObject userRequest) {
-        return this.userService.registerCustomer(userRequest);
+    public CustomerResponse registerCustomer(@Valid @RequestBody CustomerRequest customerRequest) {
+        return this.userService.registerCustomer(customerRequest);
     }
 
     /**
      *
      * @param id is the customer id we get through the path variable
-     * @return a CustomerResponseRemoteObject with the HTTP status code 200
+     * @return a CustomerResponse with the HTTP status code 200
      */
     @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
-    public CustomerResponseRemoteObject getCustomer(@PathVariable("id") Long id) {
+    public CustomerResponse getCustomer(@PathVariable("id") Long id) {
         return this.userService.getCustomer(id);
     }
 
@@ -55,7 +54,7 @@ public class CustomersRestController {
      * @return a ArrayList of customers
      */
     @GetMapping(value = "", produces = APPLICATION_JSON_VALUE)
-    public List<CustomerResponseRemoteObject> getAllCustomers() {
+    public List<CustomerResponse> getAllCustomers() {
         return this.userService.getAllCustomers();
     }
 }

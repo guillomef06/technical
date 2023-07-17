@@ -13,11 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FlightResponseRemoteObject implements Serializable {
+public class FlightResponse implements Serializable {
 
-    private AirportResponseRemoteObject startAirport;
+    private String flightDesignator;
 
-    private AirportResponseRemoteObject destinationAirport;
+    private AirportResponse originAirport;
+
+    private AirportResponse destinationAirport;
 
     private BigDecimal price;
 
