@@ -6,11 +6,14 @@ import com.example.technical.models.response.FlightResponse;
 import com.example.technical.services.IFlightsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,13 +21,19 @@ import java.time.Month;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = CustomersRestController.class)
+@WebMvcTest(controllers = FlightsRestController.class)
 @EnableConfigurationProperties(value = AppPropertiesResolver.class)
 @ActiveProfiles("test")
 class FlightsRestControllerTest {
-    @Mock
-    IFlightsService flightsService;
+
+    @MockBean
+    private IFlightsService flightsService;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     private List<FlightResponse> flightsResponse;
 
@@ -40,16 +49,20 @@ class FlightsRestControllerTest {
     }
 
     @Test
-    void testGetAllFlights() {
+    void testGetAllFlights() throws Exception {
         when(flightsService.getAllFlights()).thenReturn(flightsResponse);
 
-        //Assertions.assertEquals(List.of(new FlightResponse("flightDesignator", new AirportResponse("iataCode", "city", "country"), new AirportResponse("iataCode", "city", "country"), new BigDecimal(0), LocalDateTime.of(2023, Month.JULY, 14, 0, 27, 56))), result);
+        mockMvc.perform(get("/api/v1/flights/")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testGetFlightsFromOriginAndDestinationIataCodes() {
+    void testGetFlightsFromOriginAndDestinationIataCodes() throws Exception {
         when(flightsService.getFlightsFromOriginAndDestinationIataCodes(anyString(), anyString(), any())).thenReturn(null);
 
-        //Assertions.assertEquals(null, null);
+        mockMvc.perform(get("/api/v1/flights/")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

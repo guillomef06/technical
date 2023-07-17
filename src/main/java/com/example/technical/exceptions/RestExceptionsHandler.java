@@ -10,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -81,7 +80,7 @@ public class RestExceptionsHandler {
      */
     @ExceptionHandler(value = {BadRequestException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public RestExceptionMessage handleBadRequestException(BadRequestException e, WebRequest req) {
+    public RestExceptionMessage handleBadRequestException(BadRequestException e) {
         return new RestExceptionMessage(e.getMessage(), ZonedDateTime.now(ZoneId.of(appPropertiesResolver.getZoneId())));
     }
 

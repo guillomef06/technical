@@ -18,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.technical.config.TestUtils.asJsonString;
@@ -117,9 +116,7 @@ class CustomersRestControllerTest {
 
     @Test
     void getAllCustomer() throws Exception {
-        List<CustomerResponse> all = new ArrayList<>();
-        all.add(customerResponse);
-        when(customersService.getAllCustomers()).thenReturn(all);
+        when(customersService.getAllCustomers()).thenReturn(List.of(customerResponse));
 
         mockMvc.perform(get("/api/v1/customers/")
                 .accept(MediaType.APPLICATION_JSON))
